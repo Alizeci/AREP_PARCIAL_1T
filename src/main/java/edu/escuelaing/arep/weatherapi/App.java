@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.escuelaing.arep.weatherapi.httpserver.WebServer;
+import edu.escuelaing.arep.weatherapi.service.WebServer;
 
 /**
  * Clase que contiene las caracteristicas principales de comunicación para Heroku usando librerías para manejo de red de java

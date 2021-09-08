@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.escuelaing.arep.weatherapi.httpserver;
+package edu.escuelaing.arep.weatherapi.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +25,20 @@ public class WebServer {
 	 * Atributo que define el WebServer
 	 */
 	public static final WebServer _instance = new WebServer();
+
+	protected String city;
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getURL() {
+		return "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=182835f08a24103febf5318c1af5167b";
+	}
 
 	public WebServer() {
 
@@ -97,7 +111,7 @@ public class WebServer {
 					if (in != null && in.ready()) {
 
 						while ((inputLine = in.readLine()) != null) {
-							// System.out.println("Received: " + inputLine);
+							System.out.println("Received: " + inputLine);
 							request.append(inputLine);
 							if (!in.ready()) {
 								break;
@@ -118,15 +132,39 @@ public class WebServer {
 							ls_uriStr = las_request[1];
 
 							if ((ls_uriStr != null) && (!ls_uriStr.isEmpty())) {
-								URI resourceURI;
-								resourceURI = new URI(ls_uriStr);
-
-								if (ls_uriStr.equals("/")) {
+								URI resourceURI = new URI(ls_uriStr);
+								
+								String api = resourceURI.getPath();
+								String query = resourceURI.getQuery();
+								
+								//System.out.println("api: " + api);
+								//System.out.println("query: " + query);
+								
+								if (api.equals("/clima")) {
+									outputLine = weatherPage();
+									out.println(outputLine);
 									
-										outputLine = default404Response();
-										out.println(outputLine);
+								} else if (api.equals("/consulta") && query!= null) {
+									String nameCity = query.substring(query.indexOf("=")+1);
+									
+									if (nameCity!=null) {
+										//System.out.println(query.substring(query.indexOf("=")+1));
+										setCity(nameCity);
+										
+										String response = getURL();
+										
+										if (response!=null) {
+											outputLine = weatherCity(response);
+											out.println(outputLine);
+										}else {
+											throw new IOException("ServerConnection response informació del clima desconocida!");
+										}
+									}else {
+										throw new IOException("ServerConnection city input vacío o nulo!");
+									}
 								} else {
-									throw new IOException("ServerConnection ls_uriStr desconocida!");
+									outputLine = default404Response();
+									out.println(outputLine);
 								}
 							}
 						}
@@ -142,7 +180,27 @@ public class WebServer {
 			throw new IOException("ServerConnection Socket no puede ser nulo");
 		}
 	}
-	
+
+	private String weatherCity(String response) {
+		String outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "\r\n" + "<!DOCTYPE html>\n"
+				+ "<html>\n" + "	<head>\n" + "		<meta charset=\"UTF-8\">\n"
+				+ "<meta http-equiv=\"refresh\" content=\"1;URL="+response+"\">"
+				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + "</body>\n" + "</html>\n";
+		return outputLine;
+	}
+
+	/**
+	 * Página del clima al intentar conectar con el API /clima
+	 * 
+	 * @return la página de la url por defecto
+	 */
+	private String weatherPage() {
+		String outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "\r\n" + "<!DOCTYPE html>\n"
+				+ "<html>\n" + "	<head>\n" + "		<meta charset=\"UTF-8\">\n"
+				+ "<meta http-equiv=\"refresh\" content=\"5;URL=http://openweathermap.org\">"
+				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + "</body>\n" + "</html>\n";
+		return outputLine;
+	}
 
 	/**
 	 * Página por defecto al intentar conectar con el servidor
