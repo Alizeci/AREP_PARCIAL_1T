@@ -1,8 +1,8 @@
 ## TALLER DE VERIFICACIÓN DE CONOCIMIENTOS TÉCNICOS [![Heroku](https://img.icons8.com/color/25/000000/heroku.png)](https://current-weather-web.herokuapp.com/)
 
 Se construye un servidor web simple que proporciona dos servicios web.
-+ Uno retorne la página (La página está quemada en el código)
-+ Y retorna el Json con los datos del clima, dada la ciudad.
++ Primer servicio, retorna la página OpenWeather.org (La página está quemada en el código)
++ Segundo servicio, retorna el Json con los datos del clima, dada la ciudad.
 
 Se usa solo Java y las librerías para manejo de la red.
 
