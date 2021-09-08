@@ -172,7 +172,7 @@ public class WebServer {
 										}
 
 										if (finalResponse.toString() != null) {
-											outputLine = finalResponse.toString();
+											outputLine = weatherCity(finalResponse.toString());
 											System.out.println(outputLine);
 											out.println(outputLine);
 										} else {
@@ -202,7 +202,14 @@ public class WebServer {
 			throw new IOException("ServerConnection Socket no puede ser nulo");
 		}
 	}
-	
+
+	private String weatherCity(String response) {
+		String outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "\r\n" + "<!DOCTYPE html>\n"
+				+ "<html>\n" + "	<head>\n" + "		<meta charset=\"UTF-8\">\n"
+				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + response + "</body>\n" + "</html>\n";
+		return outputLine;
+	}
+
 	/**
 	 * Página del clima al intentar conectar con el API /clima
 	 * 
