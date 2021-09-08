@@ -30,10 +30,6 @@ public class WebServer {
 
 	protected String city;
 
-	public String getCity() {
-		return city;
-	}
-
 	public void setCity(String city) {
 		this.city = city;
 	}
@@ -150,30 +146,29 @@ public class WebServer {
 									String nameCity = query.substring(query.indexOf("=") + 1);
 
 									if (nameCity != null) {
-										// System.out.println(query.substring(query.indexOf("=")+1));
 										setCity(nameCity);
 
-										String response = getURL();
-										StringBuilder finalResponse = new StringBuilder();
+										StringBuilder response = new StringBuilder();
 
 										try {
-											URL urlApi = new URL(response);
+											URL urlApi = new URL(getURL());
 											HttpURLConnection con = (HttpURLConnection) urlApi.openConnection();
 											con.setRequestMethod("GET");
 											BufferedReader bufferedReader = new BufferedReader(
 													new InputStreamReader(con.getInputStream()));
 											String line;
 											while ((line = bufferedReader.readLine()) != null) {
-												finalResponse.append(line);
+												response.append(line);
 											}
 											bufferedReader.close();
 										} catch (Exception e) {
-
+											throw new IOException(
+													"httpConnection connection no es posible conectarse en este momento, revise url solicitada!");
 										}
 
-										if (finalResponse.toString() != null) {
-											outputLine = weatherCity(finalResponse.toString());
-											System.out.println(outputLine);
+										if (response.toString() != null) {
+											outputLine = weatherCity(response.toString());
+											// System.out.println(JSON.stringify(outputLine));
 											out.println(outputLine);
 										} else {
 											throw new IOException(
@@ -203,10 +198,18 @@ public class WebServer {
 		}
 	}
 
+	/**
+	 * Página con información del clima en JSON al intentar conectar con el API
+	 * /clima
+	 * 
+	 * @param response
+	 * @return
+	 */
 	private String weatherCity(String response) {
 		String outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "\r\n" + "<!DOCTYPE html>\n"
 				+ "<html>\n" + "	<head>\n" + "		<meta charset=\"UTF-8\">\n"
-				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + response + "</body>\n" + "</html>\n";
+				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + response + "</body>\n"
+				+ "</html>\n";
 		return outputLine;
 	}
 
