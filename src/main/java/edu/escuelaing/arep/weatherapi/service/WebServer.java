@@ -197,7 +197,7 @@ public class WebServer {
 	private String weatherPage() {
 		String outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "\r\n" + "<!DOCTYPE html>\n"
 				+ "<html>\n" + "	<head>\n" + "		<meta charset=\"UTF-8\">\n"
-				+ "<meta http-equiv=\"refresh\" content=\"5;URL=http://openweathermap.org\">"
+				+ "<meta http-equiv=\"refresh\" content=\"1;URL=http://openweathermap.org\">"
 				+ "		<title>Weatherpage</title>\n" + "	</head>\n" + "	<body>\n" + "</body>\n" + "</html>\n";
 		return outputLine;
 	}
